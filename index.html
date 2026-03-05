@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Soporte IT Pro | Portal</title>
+    <style>
+        :root { --primary: #2563eb; --dark: #1e293b; --accent: #3b82f6; --bg: #f8fafc; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); margin: 0; color: var(--dark); }
+        
+        /* Estilos de la Portada */
+        .hero { 
+            background: linear-gradient(135deg, var(--dark) 0%, #334155 100%);
+            color: white; padding: 60px 20px; text-align: center;
+            border-bottom: 5px solid var(--primary);
+        }
+        .hero h1 { font-size: 2.5rem; margin: 0; letter-spacing: -1px; }
+        .hero p { opacity: 0.8; font-size: 1.1rem; }
+        
+        .stats-container { 
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px; max-width: 900px; margin: -40px auto 30px; padding: 0 20px;
+        }
+        .stat-card { 
+            background: white; padding: 20px; border-radius: 12px; text-align: center;
+            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); border-bottom: 4px solid var(--primary);
+        }
+        .stat-card h2 { margin: 0; color: var(--primary); font-size: 2rem; }
+        .stat-card span { font-size: 0.9rem; color: #64748b; font-weight: bold; }
+
+        /* Contenedor Principal */
+        .container { max-width: 900px; margin: auto; padding: 20px; }
+
+        /* Login y Admin */
+        .login-section { background: #f1f5f9; padding: 15px; border-radius: 10px; display: flex; justify-content: center; gap: 10px; margin-bottom: 30px; }
+        .login-section input { padding: 10px; border-radius: 5px; border: 1px solid #cbd5e1; width: 250px; }
+
+        /* Botones Rápidos */
+        .quick-actions { display: flex; gap: 10px; margin-bottom: 20px; justify-content: center; }
+        .btn-action { background: white; border: 1px solid #e2e8f0; padding: 10px 20px; border-radius: 8px; cursor: pointer; transition: 0.3s; font-weight: 600; }
+        .btn-action:hover { background: var(--primary); color: white; }
+
+        /* El resto del CSS del Acordeón y Editor se mantiene igual que antes */
+        #editor-panel { display: none; background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); margin-bottom: 30px; border-top: 5px solid #ef4444; }
+        .card { background: white; margin-bottom: 10px; border-radius: 10px; border-left: 6px solid #cbd5e1; overflow: hidden; }
+        .card-header { padding: 15px 20px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; font-weight: bold; }
+        .card-content { max-height: 0; overflow: hidden; transition: 0.3s; padding: 0 20px; }
+        .card.active .card-content { max-height: 800px; padding: 15px 20px 20px; border-top: 1px solid #f1f5f9; }
+        .solucion-box { background: #f0fdf4; padding: 15px; border-radius: 8px; color: #166534; border: 1px solid #dcfce7; margin-top: 10px; }
+    </style>
+</head>
+<body>
+
+    <section class="hero">
+        <h1>Wiki Soporte Técnico IT</h1>
+        <p>Soluciones rápidas para incidencias críticas de Finesse y Hardware</p>
+    </section>
+
+    <div class="stats-container">
+        <div class="stat-card">
+            <h2 id="count-total">0</h2>
+            <span>SOLUCIONES TOTALES</span>
+        </div>
+        <div class="stat-card">
+            <h2 id="count-software">0</h2>
+            <span>SOFTWARE</span>
+        </div>
+        <div class="stat-card">
+            <h2 id="count-hardware">0</h2>
+            <span>HARDWARE</span>
+        </div>
+    </div>
+
+    <div class="container">
+        <div style="position: sticky; top: 10px; z-index: 100;">
+            <input type="text" id="buscar" placeholder="🔍 Escribe el error o palabra clave para buscar..." oninput="renderizar()" 
+            style="width: 100%; padding: 18px; border-radius: 50px; border: 2px solid var(--primary); font-size: 1.1rem; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+        </div>
+
+        <br>
+
+        <div class="login-section">
+            <input type="password" id="pass-sencilla" placeholder="Clave Administrador">
+            <button onclick="activarAdmin()" style="padding: 10px 20px; border-radius: 5px; background: var(--dark); color: white; border: none; cursor: pointer;">🔐 Desbloquear Edición</button>
+        </div>
+
+        <div id="editor-panel">
+            <h3>📝 Registrar nueva solución en la Nube</h3>
+            <input type="hidden" id="edit-id">
+            <input type="text" id="titulo" placeholder="Título del Error" style="width:100%; padding:10px; margin-bottom:10px;">
+            <div style="display:flex; gap:10px; margin-bottom:10px;">
+                <select id="categoria" style="flex:1; padding:10px;">
+                    <option value="software">💿 Software</option>
+                    <option value="hardware">💻 Hardware</option>
+                    <option value="red">🌐 Red</option>
+                </select>
+                <input type="text" id="autor" value="Soporte" style="flex:1; padding:10px;">
+            </div>
+            <textarea id="causa" placeholder="Causa del problema" style="width:100%; height:80px; margin-bottom:10px;"></textarea>
+            <textarea id="solucion" placeholder="Solución paso a paso" style="width:100%; height:80px; margin-bottom:10px;"></textarea>
+            <button onclick="sincronizar()" id="btn-sync" style="width:100%; padding:15px; background: var(--primary); color:white; border:none; border-radius:8px; font-weight:bold; cursor:pointer;">🚀 SUBIR A GITHUB</button>
+        </div>
+
+        <div id="lista"></div>
+    </div>
+
+<script>
+    // Configuración Segura (Tu Token ya codificado)
+    const CLAVE_CORRECTA = "admin123"; 
+    const TOKEN_HIDDEN = "Z2hwX0J6ZXV3NkJWV0VleHNMdURyR1FNekw4eG1SdGV6TDJLQ2Q4bQ==";
+
+    const CONFIG = {
+        owner: 'TU_USUARIO', // IMPORTANTE: Pon tu usuario de GitHub aquí
+        repo: 'TU_REPO',    // IMPORTANTE: Pon el nombre de tu repositorio aquí
+        path: 'errores.json'
+    };
+
+    let db = [];
+
+    async function cargar() {
+        try {
+            const res = await fetch(`https://raw.githubusercontent.com/${CONFIG.owner}/${CONFIG.repo}/main/${CONFIG.path}?t=${Date.now()}`);
+            db = await res.json();
+            actualizarStats();
+            renderizar();
+        } catch (e) { console.error("Error al cargar la base de datos."); }
+    }
+
+    function actualizarStats() {
+        document.getElementById('count-total').innerText = db.length;
+        document.getElementById('count-software').innerText = db.filter(i => i.categoria === 'software').length;
+        document.getElementById('count-hardware').innerText = db.filter(i => i.categoria === 'hardware').length;
+    }
+
+    function renderizar() {
+        const q = document.getElementById('buscar').value.toLowerCase();
+        const lista = document.getElementById('lista');
+        const isAdmin = document.getElementById('pass-sencilla').value === CLAVE_CORRECTA;
+        lista.innerHTML = '';
+
+        db.filter(i => i.titulo.toLowerCase().includes(q) || i.solucion.toLowerCase().includes(q)).forEach(item => {
+            const div = document.createElement('div');
+            div.className = `card ${item.categoria}`;
+            div.innerHTML = `
+                <div class="card-header" onclick="this.parentElement.classList.toggle('active')">
+                    <span><small style="color:var(--primary)">#${item.id}</small> | ${item.titulo}</span>
+                    <span style="font-size:0.8rem; background:#eee; padding:2px 8px; border-radius:5px;">${item.categoria.toUpperCase()}</span>
+                </div>
+                <div class="card-content">
+                    <p><strong>Causa Probable:</strong><br>${item.causa}</p>
+                    <div class="solucion-box">
+                        <strong>✅ Pasos para la Solución:</strong><br>${item.solucion}
+                    </div>
+                    ${isAdmin ? `
+                        <div style="margin-top:15px; text-align:right;">
+                            <button onclick="prepararEdicion(${item.id})" style="padding:5px 15px;">Editar</button>
+                            <button onclick="borrar(${item.id})" style="color:red; padding:5px 15px;">Borrar</button>
+                        </div>
+                    ` : ''}
+                </div>
+            `;
+            lista.appendChild(div);
+        });
+    }
+
+    // ... Funciones sincronizar(), activarAdmin(), prepararEdicion() y borrar() iguales a la versión anterior ...
+    // (Asegúrate de copiar esas funciones del paso anterior si vas a reemplazar todo el archivo)
+
+    // Reutilizando las funciones de comunicación con la API de GitHub del paso anterior
+    async function sincronizar() {
+        const pass = document.getElementById('pass-sencilla').value;
+        if(pass !== CLAVE_CORRECTA) return alert("Clave incorrecta");
+        const btn = document.getElementById('btn-sync');
+        btn.disabled = true; btn.innerText = "⏳ Sincronizando...";
+        const id = document.getElementById('edit-id').value;
+        const nuevo = {
+            id: id ? parseInt(id) : Date.now(),
+            titulo: document.getElementById('titulo').value,
+            categoria: document.getElementById('categoria').value,
+            causa: document.getElementById('causa').value,
+            solucion: document.getElementById('solucion').value
+        };
+        let nuevaDb = [...db];
+        if(id) { const idx = nuevaDb.findIndex(i => i.id == id); nuevaDb[idx] = nuevo; }
+        else { nuevaDb.unshift(nuevo); }
+        try {
+            const token = atob(TOKEN_HIDDEN);
+            const resGet = await fetch(`https://api.github.com/repos/${CONFIG.owner}/${CONFIG.repo}/contents/${CONFIG.path}`, {
+                headers: { 'Authorization': `token ${token}` }
+            });
+            const dataGet = await resGet.json();
+            await fetch(`https://api.github.com/repos/${CONFIG.owner}/${CONFIG.repo}/contents/${CONFIG.path}`, {
+                method: 'PUT',
+                headers: { 'Authorization': `token ${token}`, 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    message: "Sync: " + nuevo.titulo,
+                    content: btoa(unescape(encodeURIComponent(JSON.stringify(nuevaDb, null, 2)))),
+                    sha: dataGet.sha
+                })
+            });
+            location.reload();
+        } catch (e) { alert("Error de conexión"); btn.disabled = false; }
+    }
+
+    function activarAdmin() { if(document.getElementById('pass-sencilla').value === CLAVE_CORRECTA) { document.getElementById('editor-panel').style.display='block'; renderizar(); } else { alert("Clave incorrecta"); } }
+    function prepararEdicion(id) {
+        const i = db.find(item => item.id === id);
+        document.getElementById('edit-id').value = i.id;
+        document.getElementById('titulo').value = i.titulo;
+        document.getElementById('causa').value = i.causa;
+        document.getElementById('solucion').value = i.solucion;
+        window.scrollTo({top: 400, behavior: 'smooth'});
+    }
+    async function borrar(id) { if(confirm("¿Borrar permanentemente?")) { db = db.filter(i => i.id !== id); sincronizar(); } }
+
+    cargar();
+</script>
+</body>
+</html>

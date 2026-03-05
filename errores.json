@@ -1,0 +1,92 @@
+[
+  {
+    "id": 1,
+    "titulo": "Error al estampar tarjetas",
+    "categoria": "hardware",
+    "autor": "Soporte Técnico",
+    "fecha": "2024-03-05",
+    "descripcion": "El sistema arroja error al intentar mandar a estampar tarjetas[cite: 15, 17].",
+    "causa": "Servicio Print Spooler detenido o impresora láser no configurada (el sistema envía un contrato a la impresora antes de estampar)[cite: 16, 17].",
+    "solucion": "1. Verificar que el Print Spooler esté iniciado. 2. Instalar la impresora láser. 3. Correr el REPARADOR DE COLA DE IMPRESIÓN y reconfigurar la impresora[cite: 16, 18]."
+  },
+  {
+    "id": 2,
+    "titulo": "Fallo en validación de firmas (Finesse)",
+    "categoria": "software",
+    "autor": "Soporte Técnico",
+    "fecha": "2024-03-05",
+    "descripcion": "Error al validar firmas en la aplicación Finesse[cite: 19, 20].",
+    "causa": "Archivos del sistema dañados o faltantes en la caché DLL[cite: 20].",
+    "solucion": "Ejecutar el comando 'sfc /scannow' en CMD. Si solicita insertar CD-ROM, dar 'Cancelar' y luego 'Sí' hasta completar el proceso[cite: 20]."
+  },
+  {
+    "id": 3,
+    "titulo": "IP fuera de rango DHCP",
+    "categoria": "red",
+    "autor": "Soporte Técnico",
+    "fecha": "2024-03-05",
+    "descripcion": "El equipo registra una dirección IP que no corresponde al rango asignado por el DHCP[cite: 23, 24].",
+    "causa": "Desincronización con el servidor DHCP a pesar de que el punto de red esté bien[cite: 24].",
+    "solucion": "Ejecutar en CMD: 'ipconfig /release' seguido de 'ipconfig /renew'. Reiniciar el equipo y validar la nueva IP[cite: 25, 27]."
+  },
+  {
+    "id": 4,
+    "titulo": "Error al terminar proceso en Finesse",
+    "categoria": "software",
+    "autor": "Soporte Técnico",
+    "fecha": "2024-03-05",
+    "descripcion": "Problemas al finalizar operaciones en el entorno Finesse[cite: 21].",
+    "causa": "Configuración activa de Xscope en el ejecutable de contingencia[cite: 22].",
+    "solucion": "Ir al servidor en C:\\navnt\\navnt, abrir 'tdd_contigencia.exe' y destildar la opción 'Xscope'[cite: 22]."
+  },
+  {
+    "id": 5,
+    "titulo": "Tarjetas salen en blanco",
+    "categoria": "software",
+    "autor": "Soporte Técnico",
+    "fecha": "2024-03-05",
+    "descripcion": "Al imprimir, las tarjetas no muestran información[cite: 32].",
+    "causa": "Configuración incorrecta de divisa en la tabla SUBPRODUCTO de la base de datos[cite: 34].",
+    "solucion": "Usar Sql Query Analizer en Bd_Finesse y ejecutar: UPDATE SUBPRODUCTO SET DIVISA='VES' WHERE DIVISA='VEF'[cite: 33, 34]."
+  },
+  {
+    "id": 6,
+    "titulo": "Usuario no recibe notificación de autorización",
+    "categoria": "software",
+    "autor": "Soporte Técnico",
+    "fecha": "2024-03-05",
+    "descripcion": "Los cajeros no reciben la notificación para ser autorizados por el usuario correspondiente[cite: 41].",
+    "causa": "El SAFE está asociado a dos mismos usuarios simultáneamente[cite: 42].",
+    "solucion": "Validar mediante Sql Analizer con: SELECT * FROM CONFUSERSAFE WHERE SUSERFINESSE = '[ID_USUARIO]'. Eliminar registros duplicados si existen[cite: 43, 46]."
+  },
+  {
+    "id": 7,
+    "titulo": "Equipo saturado / Lentitud",
+    "categoria": "hardware",
+    "autor": "Soporte Técnico",
+    "fecha": "2024-03-05",
+    "descripcion": "El sistema presenta lentitud extrema o saturación[cite: 28].",
+    "causa": "Espacio insuficiente o archivos de hibernación/paginación ocupando demasiado espacio[cite: 28, 29].",
+    "solucion": "Ejecutar 'powercfg -h off' en CMD para desactivar la hibernación y liberar espacio en Disco C[cite: 29, 48]."
+  },
+  {
+    "id": 8,
+    "titulo": "Error de Tabla NAVDB vacía",
+    "categoria": "software",
+    "autor": "Soporte Técnico",
+    "fecha": "2024-03-05",
+    "descripcion": "La base de datos reporta que la tabla NAVDB no contiene información[cite: 47].",
+    "causa": "Fallo en la sincronización o corrupción de la tabla[cite: 47].",
+    "solucion": "Importar la tabla NAVDB desde otro servidor que esté operativo[cite: 47]."
+  },
+  {
+    "id": 9,
+    "titulo": "Sin privilegios para la operación",
+    "categoria": "software",
+    "autor": "Soporte Técnico",
+    "fecha": "2024-03-05",
+    "descripcion": "Error de perfilamiento al intentar realizar una operación específica[cite: 54].",
+    "causa": "El usuario no tiene los permisos necesarios asignados en su perfil[cite: 54].",
+    "solucion": "Verificar el perfilamiento del usuario y dar permisos explícitos en la carpeta NAVNT si es necesario[cite: 52, 54]."
+  }
+]
